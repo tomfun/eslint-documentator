@@ -1,0 +1,18 @@
+{
+  "apps": [
+    {
+      "name": "eslint-documentator",
+      "script": "./index.js",
+      "watch": ["index.js"],
+      "node_args": "--harmony",
+      "merge_logs": true,
+      "error_file": "./log/err.log",
+      "out_file": "./log/out.log",
+      "max_memory_restart": "250M",
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": "8080"
+      }
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+.rule-disable {
+    color: #AA0066;
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    background-color: rgba(100, 0, 0, 0.1);
+    border-radius: 1em;
+}
+
+.rule-warning {
+    color: #666666;
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    background-color: gba(50, 50, 0, 0.1);
+    border-radius: 1em;
+}
+
+.rule-error {
+    color: #00AAAA;
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    background-color: rgba(0, 50, 100, 0.1);
+    border-radius: 1em;
+}
+
+.rule-empty {
+    color: #0066AA;
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    background-color: rgba(50, 0, 100, 0.05);
+    border-radius: 1em;
+}
+
+body > .container {
+    margin: 0;
+}
+
+table.source-table.table {
+    position: relative;
+}
+
+
+.code-line {
+    font-size: 90%;
+    color: #5e151f;
+    background-color: rgba(220, 220, 255, 0.25);
+    border-radius: 4px;
+    font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+
+table.source-table.table > tbody > tr > td {
+    border-top: none;
+}
+
+table.table.source-table > tbody > tr > td > span.danger {
+    color: rgb(125, 25, 25);
+    background-color: rgba(200,100,100,0.05);
+}
+
+table.table.source-table > tbody > tr > td > span.warning {
+    color: rgb(100, 75, 25);
+    background-color: rgba(100,100,100,0.05);
+}
+
+table.table.source-table > tbody >tr>td {
+    padding: 0;
+}
+
+table.table.source-table tr.my-highlihter {
+    padding: 0;
+    position: absolute;
+    border: 1px solid rgba(0,0,100,0.08);
+    background-color: rgba(100,0,0,0.2);
+    color: transparent;
+    border-radius: 4em;
+    width: 2em;
+    height: 2em;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    transition-timing-function: ease-in-out;
+}
+
+.container {
+    width: 100%;
+}
