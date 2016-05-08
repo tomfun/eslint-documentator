@@ -32,10 +32,7 @@ const cssClassSeverityMap = {
   'undefined': '',
 };
 
-function htmlRuleFormatter(ruleVal, compareWith) {
-  if (compareWith) {
-    //TODO
-  }
+function htmlRuleFormatter(ruleVal) {
   let result = `<span class="${cssClassRuleMap[ruleVal.value]}">${ruleVal.value}</span>`;
   if (ruleVal.options) {
     result += `<pre style="max-width: ${Math.floor(100 / (dependencies.length + 1))}vw;overflow: auto;">${JSON.stringify(ruleVal.options, null, 2)}</pre>`;
@@ -144,7 +141,7 @@ function toHtml(packages, rules, userConfigs = [], userFile = null) {
         ..._.map(packages, (v) => _.chain(v.result)
           .filter({line: line + 1})
           .each((lintLine) => {
-            lintLine.configOptions = JSON.stringify(v.config.rules[lintLine.ruleId]).replace(/'/g, '&#39;');
+            lintLine.configOptions = (JSON.stringify(v.config.rules[lintLine.ruleId]) || 'oops!').replace(/'/g, '&#39;');
             return v;
           })
           .value())
@@ -178,7 +175,7 @@ function toHtml(packages, rules, userConfigs = [], userFile = null) {
           <span class="glyphicon glyphicon-minus"></span>
           Убрать
         </button>
-        <textarea class="form-control" rows="8" id="userConfig${i}" name="userConfig[]">${config}</textarea>
+        <textarea class="form-control" rows="8" id="userConfig${i}" name="userConfig[]">${_.escape(config)}</textarea>
       </div>
     `)
     .value()
@@ -189,9 +186,6 @@ function toHtml(packages, rules, userConfigs = [], userFile = null) {
  <head>
   <meta charset="utf-8">
   <title>Eslint checker</title>
-  <style>
-  p { color:  navy; }
-  </style>
   <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -207,22 +201,28 @@ integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En
 <!-- jquery JavaScript -->
 <script src="https://code.jquery.com/jquery-2.2.3.min.js"
 integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb"
- crossorigin="anonymous"></script>
+crossorigin="anonymous"
+ ></script>
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"
 integrity="sha384-YWP9O4NjmcGo4oEJFXvvYSEzuHIvey+LbXkBNJ1Kd0yfugEZN9NCQNpRYBVC1RvA"
-crossorigin="anonymous"></script>
+crossorigin="anonymous"
+></script>
 <link rel="stylesheet"
 href="https://code.jquery.com/ui/1.10.4/themes/ui-darkness/jquery-ui.css"
  crossorigin="anonymous">
 
 <!-- Add fancyBox -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" type="text/css" media="screen" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.pack.js"
+integrity="sha384-A/Tc8RFHsjkPvgL0yZebgTxxmCGCSaTpGkyQLeFFFJQIAzSozLwNGX9AOCIpxoXC"
+crossorigin="anonymous"
+></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
 integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
 crossorigin="anonymous"></script>
+
 <link rel="stylesheet" href="fr.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
  </head>
@@ -232,7 +232,7 @@ crossorigin="anonymous"></script>
       ${configRows}
       <div class="form-group">
         <label for="userFile">js file</label>
-        <textarea class="form-control" rows="4" id="userFile" name="userFile">${userFile}</textarea>
+        <textarea class="form-control" rows="4" id="userFile" name="userFile">${_.escape(userFile)}</textarea>
       </div>
       <div class="btn-group">
         <button type="button" class="btn btn-default add-config">
