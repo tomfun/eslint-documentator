@@ -35,7 +35,12 @@ const cssClassSeverityMap = {
 function htmlRuleFormatter(ruleVal) {
   let result = `<span class="${cssClassRuleMap[ruleVal.value]}">${ruleVal.value}</span>`;
   if (ruleVal.options) {
-    result += `<pre style="max-width: ${Math.floor(100 / (dependencies.length + 1))}vw;overflow: auto;">${JSON.stringify(ruleVal.options, null, 2)}</pre>`;
+    const formattedOptions = JSON.stringify(ruleVal.options, null, 2)
+      .split('\n');
+    formattedOptions.shift();
+    formattedOptions.pop();
+    result += ',';
+    result += `<pre class="need-scroll">${formattedOptions.map((s) => s.slice(2)).join('\n')}</pre>`;
   }
   return result;
 }
@@ -56,17 +61,24 @@ function doJob(userConfigs = [], userFile = null) {
         short: 'recommended'
       }
     ])
-    .each((v) => {
-      const options = {encoding: 'UTF-8', env: {ESLINT_EXTENDS: v.name}};
-      const out = cp.execSync('./node_modules/.bin/eslint index.js --print-config', options);
-      v.config = JSON.parse(out);
-    })
     .union(_.map(userConfigs, (config, index) => ({
       name:   `user-config-${index}`,
       short:  `u-c-${index}`,
       _user:  true,
       config: JSON.parse(config)
     })))
+    .each((v) => {
+      let out;
+      if (v._user) {
+        fs.writeFileSync('./.user-eslintrc.json', JSON.stringify(v.config), {encoding: 'utf8', mode: 0o600});
+        const options = {encoding: 'UTF-8'};
+        out = cp.execSync('./node_modules/.bin/eslint index.js --config .user-eslintrc.json --print-config', options);
+      } else {
+        const options = {encoding: 'UTF-8', env: {ESLINT_EXTENDS: v.name}};
+        out = cp.execSync('./node_modules/.bin/eslint index.js --print-config', options);
+      }
+      v.config = JSON.parse(out);
+    })
     //.each((v) => v.module = require(v.name)) ESLINT_EXTENDS
     .value();
 
@@ -86,7 +98,7 @@ function doJob(userConfigs = [], userFile = null) {
         .map(`config.rules.${rule}`)
         .map((ruleVal) => {
           if (_.isArray(ruleVal)) {
-            if (ruleVal in ruleMap) {
+            if (ruleVal[0] in ruleMap) {
               return {value: ruleMap[ruleVal[0]], options: _.tail(ruleVal)};
             }
             return {value: ruleVal[0], options: _.tail(ruleVal)};
@@ -122,7 +134,7 @@ function doJob(userConfigs = [], userFile = null) {
 function toHtml(packages, rules, userConfigs = [], userFile = null) {
   const tableHead = '<tr>'
     + _.union(['rule-name'], _.map(packages, (v) => `<span title="${v.name}" data-toggle="tooltip" data-placement="bottom">${v.short}</span>`))
-      .map((v) => `<td><strong>${v}</strong></td>`)
+      .map((v) => `<th><strong>${v}</strong></th>`)
       .join('')
     + '</tr>';
   const tableBody = _.map(rules, (v, k) => {
@@ -246,7 +258,7 @@ crossorigin="anonymous"></script>
       </div>
     </form>
 
-    <table class="table table-striped table-hover table-condensed table-responsive">
+    <table class="rule-table table table-striped table-hover table-condensed table-responsive">
     ${table}
     </table>
 
@@ -270,7 +282,7 @@ const server = http.createServer((req, res) => {
         post ? (_.isArray(post['userConfig[]']) ? post['userConfig[]'] : [post['userConfig[]']]) : null,
         post && post.userFile ? post.userFile : null
       );
-      res.writeHead(200, {/*'Content-Length': body.length,*/ 'Content-Type': 'text/html'});
+      res.writeHead(200, {/*'Content-Length': body.length,*/ 'Content-Type': 'text/html', 'X-XSS-Protection': 0});
       res.end(body);
     } catch (e) {
       res.writeHead(400, {/*'Content-Length': e.length,*/ 'Content-Type': 'text/plain'});

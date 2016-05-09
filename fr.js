@@ -1,5 +1,7 @@
 jQuery(function ($) {
+  //tooltip
   $('[data-toggle]').tooltip();
+  //fancybox
   $.fancybox.defaults.width = 1280;
   $.fancybox.defaults.height = 1200;
   $.fancybox.defaults.autoSize = true;
@@ -7,12 +9,44 @@ jQuery(function ($) {
   $.fancybox.defaults.fitToView = true;
   $('.rule-name').fancybox();
 
+  //auto-size code blocks
+  $('table td pre.need-scroll').each(function () {
+    var it = $(this);
+    var size = it.parents('tr').find('td').size();
+    it.css({
+      "max-width": (Math.floor(95 / (size + 1))) + 'vw',
+      overflow:    'auto'
+    })
+  });
+
+  //float table head
+  function floatTable(table) {
+    var ruleTdSizes = [];
+    var width = 0;
+    table.find('thead tr > *').each(function (i) {
+      var th = $(this);
+      ruleTdSizes[i] = th.width();
+      width += ruleTdSizes[i];
+    });
+    table.find('tr').each(function() {
+      var tr = $(this);
+      tr.find('> *').each(function (i) {
+        var td = $(this);
+        td.css({width: (100 * ruleTdSizes[i] / width) + '%'});
+      })
+    });
+    table.addClass('my-float');
+  }
+
+  floatTable($('table.rule-table'));
+
   var form = $('.lint-form');
   var configCounter = form.find('div.userConfigRow').size();
 
   function deleteConfigFromForm(e) {
     $(this).parent().remove();
   }
+
   function validateConfig(e) {
     var it = $(this);
     var formGroup = it.parents('.form-group');
@@ -49,7 +83,7 @@ jQuery(function ($) {
   $('.source-table > tbody').append(highlighted);
   var highlighterWidth = highlighted.width();
   var highlighterHeight = highlighted.height();
-  $('[data-source-column]').hover(function() {
+  $('[data-source-column]').hover(function () {
     var it = $(this);
     var val = it.data('source-column');
     var span = it.parents('tr').find('>td:first > span');
@@ -59,7 +93,9 @@ jQuery(function ($) {
     var length = text.length;
     highlighted.css({
       left: val * width / length - highlighterWidth / 2 - 3,
-      top: span.offset().top - it.parents('table.source-table').offset().top - highlighterHeight / 2 + height / 2
+      top:  span.offset().top - it.parents('table.source-table').offset().top - highlighterHeight / 2 + height / 2
     });
-  })
+  });
+
+  floatTable($('table.source-table'));
 });

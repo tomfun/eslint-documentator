@@ -82,3 +82,43 @@ table.table.source-table tr.my-highlihter {
 .container {
     width: 100%;
 }
+
+table.my-float {
+    width: 100%;
+}
+
+table.my-float thead,
+table.my-float tbody,
+table.my-float tr,
+table.my-float td,
+table.my-float th {
+    display: block;
+}
+
+table.my-float tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+table.my-float thead th {
+    height: 2em;
+
+    /*text-align: left;*/
+}
+
+table.my-float tbody {
+    height: 85vh;
+    overflow-y: auto;
+}
+
+table.my-float thead {
+    /* fallback */
+}
+
+
+table.my-float tbody td,
+table.my-float thead th {
+    width: 19.2%;/* js */
+    float: left;
+}
