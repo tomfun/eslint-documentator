@@ -22,6 +22,11 @@ Or change pm2 and so on.
 env PORT=8080 node index.js
 ```
 ## Open browser
+
+### Upload your eslint configs
+
 ![Image of Browser](/doc/996a8d5984.jpg)
+### Add javascript file and inspect it
+
 ![Image of Browser 2](/doc/05092016.png)
   
