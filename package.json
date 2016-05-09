@@ -1,13 +1,13 @@
 {
   "name": "eslint-documentator",
   "version": "1.0.0",
-  "description": "",
+  "description": "shows eslint configs in human readable format",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "tomfun",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "babel-eslint": "^6.0.4",
     "eslint": "*",
