@@ -33,6 +33,9 @@ jQuery(function ($) {
       tr.find('> *').each(function (i) {
         var td = $(this);
         td.css({width: (100 * ruleTdSizes[i] / width) + '%'});
+        if (!td.html().trim()) {
+          td.html('&nbsp;')
+        }
       })
     });
     table.addClass('my-float');
